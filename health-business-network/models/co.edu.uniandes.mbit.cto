@@ -1,0 +1,100 @@
+/**
+ * Model file mbit
+ */
+
+namespace co.edu.uniandes.mbit
+
+abstract participant Persona identified by numeroDocumento {
+  o String numeroDocumento
+  o String nombre
+  o String apellidos
+  o DateTime fechaNacimiento
+  o String genero
+}
+
+participant Cirujano extends Persona {
+  o ProcedimientoQuirigico[] procedimientos
+  o Estudio[] estudios
+  o Empleo[] empleos
+}
+
+participant Paciente extends Persona {
+  o ProcedimientoQuirigico[] procedimientos
+}
+
+asset Estudio identified by id {
+  o String id 
+  o TipoEstudio tipo
+  --> Universidad universidad
+}
+
+asset Universidad identified by id {
+  o String id
+  o String nombre
+}
+
+asset Empleo identified by id {
+  o String id
+  o DateTime fechaInicio
+  o DateTime fechaFin optional
+  --> Empresa empresa
+}
+
+asset Empresa identified by id {
+  o String id
+  o String nombre
+}
+
+asset ProcedimientoQuirigico identified by idProcedimiento {
+  o String idProcedimiento
+  o TipoProcedimiento tipo
+  o ResultadoProcedimiento resultado
+  o Complejidad complejidad
+  o DateTime fechaProcedimiento
+}
+
+enum TipoEstudio {
+  o PREGRADO
+  o ESPECIALIZACION
+  o MAESTRIA
+  o DOCTORADO
+  o DIPLOMADO
+  o CURSO
+  o CONGRESOO
+}
+
+enum TipoProcedimiento {
+  o APENDICITIS
+  o LAPAROSCOPIA
+  o BARIATRICA
+  o CARDIOVASCULAR
+  o GENERAL
+  o NEUROCIRUGIA
+}  
+  
+enum ResultadoProcedimiento {
+  o EXITOSO
+  o FALLIDO
+}
+
+enum Complejidad {
+  o BAJA
+  o MEDIA
+  o ALTA
+}
+
+transaction RegistrarCirugia {   
+  o ProcedimientoQuirigico procedimiento
+  --> Cirujano cirujano
+  --> Paciente paciente
+}
+
+transaction RegistrarEmpleo {   
+  --> Cirujano cirujano
+  o Empleo empleo
+}
+
+transaction RegistrarEstudio {   
+  --> Cirujano cirujano
+  o Estudio estudio
+}
